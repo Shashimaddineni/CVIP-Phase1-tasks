@@ -1,0 +1,133 @@
+import java.util.*;
+class Product {
+    private String name;
+    private double price;
+    private int quantity;
+
+    public Product(String name, double price, int quantity) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+   
+   public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+}
+
+
+class ShoppingCart {
+    
+private List<Product> items;
+
+    public ShoppingCart() {
+        items = new ArrayList<>();
+    }
+
+    public void addItem(Product product) {
+        items.add(product);
+    }
+
+    public void removeItem(Product product) {
+        items.remove(product);
+    }
+
+    public List<Product> getItems() {
+        return items;
+    }
+
+    public double calculateTotal() {
+        double total = 0;
+        for (Product item : items) {
+            total += item.getPrice();
+        }
+        return total;
+    }
+}
+
+
+public class EcommerceWebsite {
+    private List<Product> products;
+    private ShoppingCart cart;
+
+    public EcommerceWebsite() {
+        products = new ArrayList<>();
+        cart = new ShoppingCart();
+    }
+
+    public void addProduct(Product product) {
+        products.add(product);
+    }
+
+    public void displayProducts() {
+        System.out.println("Available Products:");
+        for (Product product : products) {
+            System.out.println(product.getName() + "   - $" + product.getPrice());
+        }
+    }
+
+    public void addToCart(Product product) {
+        if (product.getQuantity() > 0) {
+            cart.addItem(product);
+            product.setQuantity(product.getQuantity() - 1);
+            System.out.println(product.getName() + " added to the cart");
+        } else {
+            System.out.println("Sorry sir/mam, " + product.getName() + " is out of the stock.");
+        }
+    }
+
+    public void removeFromCart(Product product) {
+        cart.removeItem(product);
+        product.setQuantity(product.getQuantity() + 1);
+        System.out.println(product.getName() + " removed from the cart.");
+    }
+
+    public void displayCart() {
+        List<Product> items = cart.getItems();
+        if (items.isEmpty()) {
+            System.out.println("Your cart is empty.");
+        } else {
+            System.out.println("Your Cart-");
+            for (Product item : items) {
+                System.out.println(item.getName() + " - $" + item.getPrice());
+            }
+            System.out.println("Total: $" + cart.calculateTotal());
+        }
+    }
+
+    public static void main(String[] args) {
+       
+        EcommerceWebsite website = new EcommerceWebsite();
+
+       
+        Product product1 = new Product("Laptop", 999, 5);
+        Product product2 = new Product("Smartphone", 799, 10);
+        website.addProduct(product1);
+        website.addProduct(product2);
+
+    
+        website.displayProducts();
+
+        
+        website.addToCart(product1);
+        website.addToCart(product2);
+        website.displayCart();
+
+        
+        website.removeFromCart(product1);
+       website.displayCart();
+    }
+}

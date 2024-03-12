@@ -1,0 +1,176 @@
+import java.util.*;
+
+class Book {
+    private String title;
+    private String author;
+    private String ISBN;
+    private boolean available;
+
+  
+    public Book(String title, String author, String ISBN) {
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.available = true;
+    }
+
+ 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getISBN() {
+        return ISBN;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+}
+
+class User {
+    private String name;
+    private String email;
+    private String username;
+    private String password;
+    private List<Book> borrowedBooks;
+
+   
+    public User(String name, String email, String username, String password) {
+        this.name = name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.borrowedBooks = new ArrayList<>();
+    }
+
+   
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public List<Book> getBorrowedBooks() {
+        return borrowedBooks;
+    }
+
+    public void borrowBook(Book book) {
+        borrowedBooks.add(book);
+        book.setAvailable(false);
+    }
+
+    public void returnBook(Book book) {
+        borrowedBooks.remove(book);
+        book.setAvailable(true);
+    }
+}
+
+class Library {
+    private List<Book> books;
+    private List<User> users;
+
+  
+    public Library() {
+        this.books = new ArrayList<>();
+        this.users = new ArrayList<>();
+    }
+
+  
+    public void addBook(Book book) {
+        books.add(book);
+    }
+
+    public void removeBook(Book book) {
+        books.remove(book);
+    }
+
+    public Book findBookByISBN(String ISBN) {
+        for (Book book : books) {
+            if (book.getISBN().equals(ISBN)) {
+                return book;
+            }
+        }
+        return null;
+    }
+
+   
+    public void addUser(User user) {
+        users.add(user);
+    }
+
+    public void removeUser(User user) {
+        users.remove(user);
+    }
+
+    public User findUserByUsername(String username) {
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+ 
+    public void borrowBook(User user, String ISBN) {
+        Book book = findBookByISBN(ISBN);
+        if (book != null && book.isAvailable()) {
+            user.borrowBook(book);
+            System.out.println(user.getName() + " has borrowed the book: " + book.getTitle());
+        } else {
+            System.out.println(" book is not available for the borrowing.");
+        }
+    }
+
+    public void returnBook(User user, String ISBN) {
+        Book book = findBookByISBN(ISBN);
+        if (book != null && user.getBorrowedBooks().contains(book)) {
+            user.returnBook(book);
+            System.out.println(user.getName() + " has returned the book: " + book.getTitle());
+        } else {
+            System.out.println(" user has not borrowed this book.");
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        
+        Library library = new Library();
+
+     
+        Book book1 = new Book("One Indian Girl", "Chetan Bhagat", "9780743273565");
+        Book book2 = new Book("A Brush with Life", "satish Gujral", "9780061120084");
+        library.addBook(book1);
+        library.addBook(book2);
+
+
+        User user1 = new User("Ravi", "ravi@example.com", "alice123", "password123");
+        User user2 = new User("Ramu", "ramu@example.com", "bob456", "password456");
+        library.addUser(user1);
+        library.addUser(user2);
+
+
+        library.borrowBook(user1, "9780743273565");
+        library.returnBook(user1, "9780743273565");
+    }
+}
